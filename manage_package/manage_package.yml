@@ -1,0 +1,9 @@
+---
+
+- name: manage_package
+  hosts: all
+
+  tasks:
+
+  - name: install or remove the latest version of whatever
+    yum: name={{package}} state={{state}}
