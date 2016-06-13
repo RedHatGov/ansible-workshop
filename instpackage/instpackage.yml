@@ -1,9 +1,9 @@
 ---
 
-- name: instpackage
+- name: manage_package
   hosts: all
 
   tasks:
 
-  - name: install the latest version of whatever
-    yum: name={{package}} state=latest
+  - name: install or remove the latest version of whatever
+    yum: name={{package}} state={{state}}
