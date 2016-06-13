@@ -1,0 +1,9 @@
+---
+
+- name: instpackage
+  hosts: all
+
+  tasks:
+
+  - name: install the latest version of whatever
+    yum: name={{package}} state=latest
