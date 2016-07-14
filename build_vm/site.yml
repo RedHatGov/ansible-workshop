@@ -1,0 +1,10 @@
+- name: Clone existing VM and configure the new one
+  hosts: all
+  gather_facts: no
+  become: true
+
+  roles:
+   # Role for user management
+    - clone_vm
+   # Role for installing packages
+    #- setup_new_vm
