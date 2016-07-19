@@ -1,6 +1,6 @@
 - name: Clone existing VM and configure the new one
   hosts: all
-  gather_facts: no
+  gather_facts: yes
   become: true
 
   roles:
