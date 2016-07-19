@@ -10,6 +10,6 @@ user_password: $6$rounds=656000$RQZU4SOmV/3rseZM$y2qWQkDX/lMjLXCSXPsf8E9UsgVJkur
 
 # Define packages to be installed
 package_list:
- - name: git
- - name: vim
+ - git
+ - vim
 package_state: present
