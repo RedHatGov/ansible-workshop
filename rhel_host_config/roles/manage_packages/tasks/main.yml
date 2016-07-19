@@ -2,6 +2,4 @@
 - name: Add or remove yum packages
   package: name={{ item }} state={{ package_state }}
   with_items:
-    - "{{ package_list[0] }}"
-    - "{{ package_list[1] }}"
-    - "{{ package_list[2] }}"
+    - "{{ package_list }}"

@@ -9,5 +9,7 @@ group_name: users
 user_password: $6$rounds=656000$RQZU4SOmV/3rseZM$y2qWQkDX/lMjLXCSXPsf8E9UsgVJkurAR8MfhuSIwInDksKoOFV7eAAhDdo9Xs/CnV8j29ox8LV7KyAGGq2JP1
 
 # Define packages to be installed
-package_list: [ 'git','vim' ]
+package_list:
+ - name: git
+ - name: vim
 package_state: present
