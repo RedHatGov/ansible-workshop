@@ -12,4 +12,3 @@ user_password: $6$rounds=656000$RQZU4SOmV/3rseZM$y2qWQkDX/lMjLXCSXPsf8E9UsgVJkur
 package_list:
  - git
  - vim
-package_state: present
