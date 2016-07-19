@@ -11,4 +11,4 @@ user_password: $6$rounds=656000$RQZU4SOmV/3rseZM$y2qWQkDX/lMjLXCSXPsf8E9UsgVJkur
 
 # Define packages to be installed
 package_list: [ 'git','curl','vim' ]
-package_state: remove
+package_state: removed
