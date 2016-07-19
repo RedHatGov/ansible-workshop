@@ -1,5 +1,5 @@
 ---
 - name: Add or remove yum packages
-  package: name={{ item }} state={{ package_state }}
+  yum: name={{ item }} state={{ package_state }}
   with_items:
     - "{{ package_list }}"
