@@ -1,0 +1,14 @@
+# Define user accounts to create
+
+users: 
+ - name: peter
+ - name: bob
+ - name: alice
+
+group_name: users
+user_state: absent
+user_password: $6$rounds=656000$RQZU4SOmV/3rseZM$y2qWQkDX/lMjLXCSXPsf8E9UsgVJkurAR8MfhuSIwInDksKoOFV7eAAhDdo9Xs/CnV8j29ox8LV7KyAGGq2JP1
+
+# Define packages to be installed
+package_list: [ 'git','curl','vim' ]
+package_state: present
