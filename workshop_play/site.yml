@@ -6,12 +6,12 @@
 
   roles:
    # Role for user management
-    - manage_accounts
+    #- manage_accounts
    # Role for installing packages
-    - manage_packages
+    #- manage_packages
    # Role to change passwords
     - change_password
    # Role to register a client to Satellite
-    - sub_to_sat
+    #- sub_to_sat
    # Role to validate /etc/resolv.conf
-    - dns_config
+    #- dns_config
