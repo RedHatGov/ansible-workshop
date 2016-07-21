@@ -1,0 +1,5 @@
+---
+- name: Update user's password
+  user: name={{ item.name }} password={{ user_password }} update_password=always
+  with_items:
+    - "{{ passwd_users }}"
