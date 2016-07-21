@@ -1,15 +1,15 @@
 # Ansible Projects
 This project includes various Ansible plays, mostly focused on RHEL system administration
 
-## Build_VM
+# Build_VM
 NOTE:  This is work in progress
 
-# Dependencies 
+## Dependencies 
 None
-# vars
+### vars
 source_vm, target_vm, path, connect
 
-# Role = clone_vm
+### Role = clone_vm
 
 Tasks includes\n
 - virsh to suspend and resume source VM
