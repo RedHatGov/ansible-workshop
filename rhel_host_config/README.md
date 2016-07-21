@@ -5,8 +5,8 @@ This play adds or removes user accounts and adds or removes yum packages
 users, group_name, user_password, package_list
 
 ### Extra Vars
- - user_state: '<present | absent>'
- - package_state: '<present | absent>'
+ - user_state: "\<present \| absent\>"
+ - package_state: "\<present \| absent\>"
 
 ## Role: manage_account
 
