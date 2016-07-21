@@ -3,13 +3,15 @@ This project includes various Ansible plays, mostly focused on RHEL system admin
 
 # Build_VM
 NOTE:  This is work in progress
+
 Build_VM clones an existing KVM guest to a new guest
 
 # rhel_host_config
 NOTE:  This is work in progress
+
 Creates or removes user accounts / Installs or removes yum packages
 
-## Dependencies 
+# Dependencies 
 None
 
 
