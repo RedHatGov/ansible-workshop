@@ -14,4 +14,4 @@
    # Role to register a client to Satellite
     #- sub_to_sat
    # Role to validate /etc/resolv.conf
-    #- dns_config
+    - dns_config
