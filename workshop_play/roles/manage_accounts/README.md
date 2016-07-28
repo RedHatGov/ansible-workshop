@@ -5,7 +5,7 @@
 - Add or remove user account
 - chage to 0 for force passwd reset upon first login
 
-### group_vars
+### vars
 users, group_name, user_password
 
 ### extra_vars

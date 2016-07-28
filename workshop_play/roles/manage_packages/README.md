@@ -1,10 +1,10 @@
 ## Role: manage_packages
 - Installs or removes yum packages
 
-### Tasks 
+### Tasks
 - install or remove yum packages
 
-### group_vars
+### vars
 - package_list
 
 ### extra_vars

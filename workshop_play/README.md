@@ -1,8 +1,6 @@
-# workshop_play 
+# workshop_play
 This play performs various admin tasks including creating accounts, installing packages, change passwords, subscribe to satellite, and validate /etc/resolv.conf
 
-### group_vars
-users, group_name, user_password, package_list
 
 ### Extra Vars
  - user_state: "\<present \| absent\>"
@@ -12,7 +10,7 @@ users, group_name, user_password, package_list
 - Creates or removes specified user accounts on a RHEL host
 
 ## Role: manage_packages
-- Installs or removes specified yum packages 
+- Installs or removes specified yum packages
 
 ## Role: change_password
 - changes a password for a specified linux account
@@ -22,5 +20,3 @@ users, group_name, user_password, package_list
 
 ## Role: dns_config
 - Updates /etc/resolv.conf to match a template
-
-
