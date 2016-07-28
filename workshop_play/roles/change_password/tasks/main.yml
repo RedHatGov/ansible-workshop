@@ -3,3 +3,6 @@
   user: name={{ item.name }} password={{ new_passwd }} update_password=always
   with_items:
     - "{{ passwd_users }}"
+
+  tags:
+    - password
