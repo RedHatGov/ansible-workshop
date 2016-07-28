@@ -1,10 +1,11 @@
 ---
+  tags:
+    - accounts
+
 - name: Add or remove user account
   user: name={{ item.name }} group={{ group_name }} home=/home/{{ item.name }} password={{ user_password }} state={{ user_state }}
   with_items:
     - "{{ users }}"
-  tags:
-    - accounts
 
 - name: Force user with default password to change password at next login
   command: chage -d 0 {{ item.name }}
