@@ -5,6 +5,9 @@
 - name: install tower-cli
   pip: name=ansible-tower-cli
 
+- name: disable ssl for tower-cli for the demo
+  command: tower-cli config verify_ssl false
+
 - name: config username for ansible tower-cli
   command: tower-cli config username {{ t_user }}
 
