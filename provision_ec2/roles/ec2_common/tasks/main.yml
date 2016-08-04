@@ -12,7 +12,7 @@
     group_id: {{ec2_security_group}}
     assign_public_ip: {{assign_public_ip}}
     vpc_subnet_id: {{vpc_subnet_id}}
-    wait=true
+    wait: true
   register: ec2
 
 - name: Wait for SSH to come up
