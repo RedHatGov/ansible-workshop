@@ -8,13 +8,16 @@
 - name: config username for ansible tower-cli
   command: tower-cli config username {{ t_user }}
 
+- name: config tower host for ansible tower-cli
+  command: tower-cli config host {{ t_host }}
+
 - name: config password for ansible tower-cli
   command: tower-cli config password {{ t_pass }}
 
 - name: Add user to Ansible Tower
-  command: tower-cli user create -h {{ t_host }} --username {{ item.email }} --first-name {{ item.firstname }} --last-name {{ item.lastname }} --email {{ item.email }} --password {{ default_password }} --insecure
+  command: tower-cli user create --username {{ item.email }} --first-name {{ item.firstname }} --last-name {{ item.lastname }} --email {{ item.email }} --password {{ default_password }} --insecure
   with_items: "{{ users }}"
 
 - name: Associate user with Ansible Organization
-  command: tower-cli organization associate -h {{ t_host }} --user {{ item.email }} --organization {{ organization }} --insecure 
+  command: tower-cli organization associate --user {{ item.email }} --organization {{ organization }} --insecure
   with_items: "{{ users }}"
