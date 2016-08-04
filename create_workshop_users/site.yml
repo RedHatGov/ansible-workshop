@@ -1,0 +1,16 @@
+---
+- name: Load Lab User list
+  hosts: localhost
+  roles:
+    - role: mkouhei.include_csv
+  tasks:
+  - name: load user list
+    include_csv: src={{ user_file }}
+
+- name: add Automation Lab Users
+  hosts: all
+  gather_facts: no
+  become: true
+
+  roles:
+    - add_user
