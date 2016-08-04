@@ -1,0 +1,6 @@
+---
+- name: add Automation Lab Users
+  hosts: 52.37.227.14
+  
+  roles:
+    - add_user
