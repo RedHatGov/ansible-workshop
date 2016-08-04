@@ -1,6 +1,6 @@
 ---
 - name: setup rhel VM
-  hosts: all
+  hosts: 52.37.227.14
   gather_facts: no
   become: true
 
