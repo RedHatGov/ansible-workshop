@@ -1,5 +1,4 @@
 ---
 - name: add Automation Lab Users
-  hosts: all
   roles:
     - add_user
