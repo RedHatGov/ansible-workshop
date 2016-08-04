@@ -1,6 +1,6 @@
 ---
 - name: add Automation Lab Users
-  hosts: 52.37.227.14
-  
+  hosts: all 
+
   roles:
-    - add_user
+    - ec2_common
