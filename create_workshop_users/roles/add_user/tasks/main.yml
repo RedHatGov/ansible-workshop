@@ -1,0 +1,7 @@
+- name: Add user to Ansible Tower
+  command: tower-cli user create --username {{ item.email }} --first-name {{ item.firstname }} --last-name {{ item.lastname }} --email {{ item.email }} --password {{ default_password }}
+  with_items: {{ hostvars.localhost.remote_user_file }}
+
+- name: Associate user with Ansible Organization
+  command: tower-cli organization associate --user {{ item.email }} --organization {{ organization }}
+  with_items: {{ hostvars.localhost.remote_user_file }}
