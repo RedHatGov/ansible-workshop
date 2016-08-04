@@ -1,7 +1,6 @@
 ---
 - name: add Automation Lab Users
   hosts: all
-  become: true
 
   roles:
     - mkouhei.include_csv
