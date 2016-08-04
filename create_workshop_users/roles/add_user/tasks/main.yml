@@ -1,3 +1,4 @@
+---
 - name: ensure pip is installed
   package: name=python-pip state=present
 
