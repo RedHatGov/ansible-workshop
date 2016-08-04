@@ -1,0 +1,7 @@
+---
+- name: add Automation Lab Users
+  hosts: all
+
+  roles:
+    - mkouhei.include_csv
+    - add_user
