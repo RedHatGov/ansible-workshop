@@ -1,5 +1,5 @@
 ---
-- name: Create EC Instances for Automation Lab
+- name: Manage Instances for Automation Lab
   hosts: 127.0.0.1
   connection: local
   gather_facts: false
