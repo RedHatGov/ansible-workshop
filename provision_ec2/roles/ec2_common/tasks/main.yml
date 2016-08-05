@@ -1,8 +1,6 @@
 ---
 - name: create ec2 instance
   ec2:
-    access_key: "{{ AWS_ACCESS_KEY }}"
-    secret_key: "{{ AWS_SECRET_KEY }}"
     keypair: "{{ ec2_keypair }}"
     type: "{{ ec2_instance_type }}"
     image: "{{ ec2_image }}"
