@@ -1,7 +1,8 @@
 ---
 - name: add Automation Lab Users
   hosts: 127.0.0.1
-  connection: local  
+  connection: local
+  gather_facts: false 
 
   roles:
     - ec2_common
