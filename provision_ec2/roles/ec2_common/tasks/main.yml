@@ -23,19 +23,15 @@
   tags:
     - provision
 
+- name: gather ec2 facts
+  action: ec2_facts
+  tags:
+    - terminate
+
 - name: terminate user instances
   ec2:
     state: absent
     region: "{{ ec2_region }}"
-    instance_tags:
-      user_id: "{{ user_tag }}"
+    instance_ids: "{{ ansible_ec2_instance_id }}"
   tags:
     - terminate
-
-- name: terminate all lab instances
-  ec2:
-    instance_tags:
-      ansible_lab_user: True
-    state: terminated
-  tags:
-    - terminate_all
