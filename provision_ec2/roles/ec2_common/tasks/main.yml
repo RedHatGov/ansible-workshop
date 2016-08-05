@@ -7,6 +7,7 @@
     region: "{{ ec2_region }}"
     count: "{{ ec2_instance_count }}"
     group_id: "{{ec2_security_group}}"
+    vpc_subnet_id: "{{ ec2_subnet_id }}"
     assign_public_ip: yes
     wait: true
   register: ec2
