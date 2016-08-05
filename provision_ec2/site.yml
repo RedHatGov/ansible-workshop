@@ -1,8 +1,7 @@
 ---
-- name: add Automation Lab Users
+- name: Create EC Instances for Automation Lab
   hosts: 127.0.0.1
   connection: local
-  gather_facts: false 
-
+  gather_facts: false
   roles:
     - ec2_common
