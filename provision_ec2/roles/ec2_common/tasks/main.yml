@@ -26,6 +26,8 @@
 - name: terminate user instances
   ec2:
     state: terminated
+    instance_tags:
+      user_id: "{{ user_tag }}"
   tags:
     - terminate
 
