@@ -9,6 +9,9 @@
     group_id: "{{ec2_security_group}}"
     vpc_subnet_id: "{{ ec2_subnet_id }}"
     assign_public_ip: yes
+    tags:
+      ansible_lab_user: True
+      user_id: {{ user_tag }}
     wait: true
   register: ec2
 
