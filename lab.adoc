@@ -159,7 +159,7 @@ Every artifact (Credentials, Job Templates, etc.) in Ansible Tower has associate
 image::figure7.png[title="Adding Team Permissions"]
 ====
 
-==== A Last Word About Settings
+==== Last Word About Settings
 
 When you have all of the information handy, like your SSH keys, Slack API Token, etc. the above works takes around 15-20 minutes to configure.
 
@@ -175,3 +175,120 @@ id   name   organization
 ....
 
 === Projects
+
+Projects link your version-controlled playbooks to Ansible Tower. The importance of this concept can't be overstated. Ansible Tower is a tool to make your Ansible Playbooks more scaleable in your enterprise. But you are still writing playbooks just like you would with Ansible core.
+
+[TIP]
+While you do write them just like you would with using Ansible core, Tower can make your life easier. We'll point that out along the way in a few places.
+
+image::figure8.png[title="Creating a New Project"]
+
+==== Lab Playbooks Source Code
+
+The playbooks we will use for all of today's lab are available in a link:https://github.com/bhirsch70/Ansible[public Github repository]. So you can pull them down, replicate this lab, and expand on them as you see fit.
+
+[IMPORTANT]
+As always, pull requests are welcome!
+
+=== Inventories
+
+In Ansible Tower, inventories are how you track and group your systems so you can act on them. Our inventory for this lab will be coming from AWS, so we will need to configure Ansible Tower to look for our systems in AWS.
+
+image::figure9.png[title="Creating a new Inventory"]
+
+==== Groups
+
+Once an Inventory is created, you are presented with a Group and Hosts screen. For AWS, we want to create a group that will dynamically go out to a given region of AWS (us-west-2 in our case today) and use our Cloud Credential to log in to AWS to pull down information about all of our hosts.
+
+If you were managing inventories around your own datacenter you may want to create hosts individually depending on your source of Inventory. Ansible Tower has many options including CloudForms and Satellite that can be used as data sources.
+
+image::figure10.png[title="Creating an AWS Group"]
+
+==== Syncing Cloud Provider Groups
+
+Once our AWS Group was created, we click on the `Start Sync Process` icon on the Inventories screen. This will go out to AWS to pull down updated information. Once that is done we will have hosts populated in that section for our EC2 Inventory.
+
+image::figure11.png[title="Populated EC2 Hosts"]
+
+==== Scheduling Group Syncs
+
+You can also schedule regular sync processes from the Inventories screen. This is good when you have a dynamic cloud environment.
+
+image::figure12.png[title="Scheduling EC2 Group Updates"]
+
+=== Job Templates
+
+Now is where the rubber meets the road. A job template combines all of the things we just set up
+
+* machine credentials
+* cloud credentials
+* playbooks from your project's source SCM
+* inventories
+
+and puts them all together to provide a platform for effectively managing your infrastructure. Job Templates also have the ability to limit which hosts are acted on in multiple ways and configure all of the 'normal' Ansible things like whether or not a job is run with privilege escalation.
+
+image::figure13.png[title="Creating a Job Template"]
+
+=== Exercise One - Lab User Creation
+
+Enough of watching us up here talk about Ansible Tower. Let's get users created for everyone in the lab today so you can log in for yourself. To do this we are going to create a Job Template from to utilize a playbook we have already created. The playbook is at https://github.com/bhirsch70/Ansible/tree/master/create_workshop_users
+
+[IMPORTANT]
+This job, since it is only talking to the Tower API, will run locally on the Tower server itself. For jobs that don't actually need to go out to make changes to other systems this is normal.
+
+.site.yml - the playbook to be executed
+....
+---
+- name: add Automation Lab Users
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: false
+
+  roles:
+    - add_user
+....
+
+.roles/add_user/tasks/main.yml - the main role used by this playbook
+....
+---
+- name: ensure pip is installed
+  package: name=python-pip state=present
+
+- name: install tower-cli
+  pip: name=ansible-tower-cli
+
+- name: disable ssl for tower-cli for the demo
+  command: tower-cli config verify_ssl false
+
+- name: config username for ansible tower-cli
+  command: tower-cli config username {{ t_user }}
+
+- name: config tower host for ansible tower-cli
+  command: tower-cli config host {{ t_host }}
+
+- name: config password for ansible tower-cli
+  command: tower-cli config password {{ t_pass }}
+
+- name: Add user to Ansible Tower
+  command: tower-cli user create --username {{ item.email }} --first-name {{ item.firstname }} --last-name {{ item.lastname }} --email {{ item.email }} --password {{ default_password }}
+  with_items: "{{ users }}"
+
+- name: Associate user with Ansible Organization
+  command: tower-cli organization associate --user {{ item.email }} --organization "{{ organization }}"
+  with_items: "{{ users }}"
+
+- name: Associate user with Ansible Team
+  command: tower-cli team associate --user {{ item.email }} --team "{{ team }}"
+  with_items: "{{ users }}"
+....
+
+[IMPORTANT]
+Be sure you can log in to https://ansible-tower.c2spaas.com. The email you used to register for this workshop should be your username and the password will be shown as part of the lab. If you can't log in start shouting loud and waving your hands!
+
+=== Exercise Two - Creating EC2 Instances
+
+Now that everyone can log into Ansible Tower (right?!), everyone will be able to create a few EC2 instances to use during our following labs. You should be able to see a job template called `Provision EC2 Instances`. Click the `launch` button next to it in the `Job Templates` screen.
+
+==== Surveys
+
+You will now be prompted for a survey.
