@@ -10,7 +10,7 @@
     vpc_subnet_id: "{{ ec2_subnet_id }}"
     assign_public_ip: yes
     instance_tags:
-      ansible_lab_user: True
+      ansible_lab: true
       user_id: "{{ user_tag }}"
     wait: true
   register: ec2
