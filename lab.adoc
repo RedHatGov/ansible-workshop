@@ -1,10 +1,12 @@
 :badges:
 :icons:
+:toc-title: Agenda
 :toc2: left
 :iconsdir: http://people.redhat.com/~jduncan/images/icons
-:imagesdir: http://people.redhat.com/~jduncan/images
+:imagesdir: https://s3.amazonaws.com/ansible-lab-images
 :date: 08-Aug-2016
 :location: New York, NY
+:toclevels: 3
 
 = Automation for Everyone
 {location} : {date}
@@ -41,11 +43,135 @@ password: `atomic2016`
 Ansible Solutions Architect
 
 === Jamie Duncan
-Cloud Solutions Architect, Public Sector
+Cloud Solutions Architect
 
 === Bill Hirsch
-Solutions Architect, Public Sector
+Solutions Architect
+
+== Installing Ansible Tower
+
+=== Infrastructure
+
+For this lab, we will be using Ansible Tower 3.0.1, which is the latest production release. We are running it in an link:https://aws.amazon.com/ec2/instance-types/[`m4.xlarge`] AWS instance.
+
+[NOTE]
+.We know this is resource overkill
+====
+But we'll only be running this for a few days and our bosses are paying the bill. :)
+====
+
+=== Setup
+
+This lab is NOT a walkthrough of Ansible Tower's setup. To be honest, it's too simple. Essentially
+
+* get a system of correct size
+* register it with Red Hat
+* subscribe it to the proper channels
+* download a tarball containing the Ansible setup scripts
+* fill a few variables out in an inventory file
+* run `setup.sh`
+
+`setup.sh` just calls a playbook that deploys Ansible Tower. Easy Peasy. It took approximately 15 minutes, end-to-end, for this lab.
+
+=== The End Result
+
+The Ansible Tower we set up for this lab is at https://ansible-tower.c2spaas.com
+
+[NOTE]
+.c2spaas.com
+====
+This is a wholly unrelated domain our boss controls in Route 53 that we stole an A record from.
+====
+
+=== The First Login
+
+You know you were successful if you are able to browse to your Tower's hostname and get some like
+
+image::figure1.png[title="Ansible Tower Login Screen"]
+
+To log in, you use the admin password you set in your inventory file. It's just that easy!
 
 == The Tower UI
 
+In order to save a fair amount of time during this lab we have built out several of the constructs that Tower uses to organize itself into a enterprise, multi-tenant deployment tool. Instead of doing those live, we will walk through them quickly here so we can get to the good stuff sooner.
+
 === Settings
+
+The `settings` menu (the little gear in the top right corner) is where you do a lot of your initial work to configure Ansible Tower. Within it are 8 options (9 if you include 'About')
+
+We won't need to cover them all, but a few are key for us to be able to effectively use Tower today.
+
+. Settings Options
+* Organizations - Create Logical Organizations within Tower
+* Users - Manage Users, including their permissions
+* Teams - Create and manage Teams
+* Credentials - Manage multiple types of credentials (more on that later)
+* Management Jobs - cleaning up the Tower Database
+* Inventory Scripts - Maintain dynamic inventory from your various cloud providers
+* Notifications - Manage various kinds of notifications like Email, SMS, and Slack
+* View your License Info
+* About Tower
+
+==== Organizations
+
+We will need to create a new Organization for our Lab today.
+
+image::figure2.png[title="Creating a new Organization"]
+
+==== Teams
+
+We will need to create a new Team for our Lab today as well.
+
+image::figure3.png[title="Creating a New Team"]
+
+[IMPORTANT]
+Be sure to add your new Team to your new Organization!
+
+==== Notifications
+
+Here is where we can have a little bit of fun. We've created a Slack Team, https://redhat-ansible-lab.slack.com , that everyone here is free to join today. We are going to hook it into Ansible Tower today so we can get important notifications.
+
+This process is link:https://docs.ansible.com/ansible-tower/latest/html/userguide/notifications.html#slack[documented in the Tower 3.0.1 User Guide]. It involves creating a bot in Slack and hooking his API Key into Tower. It takes about 10 minutes.
+
+image::figure4.png[title="Attaching our Slack bot to Ansible Tower"]
+
+==== Credentials
+
+Credentials are what Ansible Tower uses to connect our automation to everything else. For our lab today we are going to set up 2 kinds of credentials.
+
+===== AWS Credentials
+
+Since this lab is in AWS we need to tell Ansible Tower how to connect. For this we create an AWS Credential. For the AWS information we create a user in IAM and give him the needed permissions. That information is available in the link:https://aws.amazon.com/iam/faqs/[IAM Documentation].
+
+image::figure5.png[title="Creating an AWS Credential"]
+
+===== Machine Credentials
+
+Ansible uses ssh as the transport method. With that in mind, we need to give Ansible Tower the same ssh key(s) that AWS sets up on the system via cloud-init when it is provisioned.
+
+image::figure6.png[title="Creating a Machine Credential"]
+
+[IMPORTANT]
+.Don't forget about the Permissions!
+====
+Every artifact (Credentials, Job Templates, etc.) in Ansible Tower has associated permissions. Be sure to associate them with the correct users and teams so they can see and use/admin them as needed when they log in!
+
+image::figure7.png[title="Adding Team Permissions"]
+====
+
+==== A Last Word About Settings
+
+When you have all of the information handy, like your SSH keys, Slack API Token, etc. the above works takes around 15-20 minutes to configure.
+
+This can all also happen through the API or the command line using tower-cli on the Tower server or a remote server connecting back to the Tower server.
+
+....
+[ec2-user@ip-172-31-48-160 ~]$ tower-cli team list
+== ======== ============
+id   name   organization
+== ======== ============
+ 1 Lab Team            2
+== ======== ============
+....
+
+=== Projects
