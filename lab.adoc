@@ -320,11 +320,85 @@ If you look at the link:https://github.com/bhirsch70/Ansible/blob/master/provisi
   local_action: wait_for host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
   with_items: "{{ ec2.instances }}"
   tags:
-    - provision
+    - provision # <1>
 
 - name: gather ec2 facts
   action: ec2_facts
   tags:
-    - terminate
+    - terminate # <2>
 ...
 ....
+<1> provision tag
+<2> terminate tag
+
+The tags can be referenced in a playbook to limit which tasks in a role are called. It allows you to selectively run parts of roles without lots of messy logic. They are link:http://docs.ansible.com/ansible/playbooks_tags.html[fully documented].
+
+Inside a Job Template, you can use tags as well. In our EC2 Provisioning Job Template, we are only running tasks in the role that have a `provision` tag.
+
+image::figure16.png[title="Limiting Roles with Tags"]
+
+[TIP]
+Job Templates can also prompt for Playbook Tags at launch. Even more ways to be dynamic and not have to repeat yourself!
+
+=== Exercise Three - Working with Inventories
+
+[IMPORTANT]
+If you are having trouble creating an instance or two, shout loud and start waving your hands!
+
+==== Creating Amazon Tags
+
+Now that we all have our own vm's created, let's do some work with them. First off, we need a way to distinguish your systems from the other lab systems that we just created. Luckily, we've already thought of that for us.
+
+Each instance that was created in EC2 had two tags attached to it as well. The first, `ansible_lab`, is the same for everyone. It allows us to easily find and remove these test instances at the end of our lab today. After all, EC2 is cheap, but it ain't free. :)
+
+The second tag is called `user_id`, and is set to the value that you set when you ran you EC2 Creation Job.
+
+The relevant part of the task is
+
+....
+  ec2:
+...
+    instance_tags:
+      ansible_lab: true
+      user_id: "{{ user_tag }}"
+....
+
+image::figure17.png[title="Amazon Tagging that was created by our Job"]
+
+==== Leveraging Amazon Tags in Tower
+
+After we created our instances we updated our EC2 Inventory. As part of this update, Tower pulled in all of the tags that are in EC2 and correlated them back to our Inventory. For each unique tag value, Tower auto-creates a group that we can leverage. You can access these groups through your Inventory.
+
+They are created with the taxonomy:
+
+`tag_tagname_tagvalue`
+
+For example, for our `user_id` tag, when I used `jduncan` as the value in my Job Template, Tower created the tag `tag_user_id_jduncan`.
+
+In the Inventories page, I can select these tag groups and do work on them as a whole.
+
+image::figure18.png[title="Using Amazon Tags to Create Dynamic Groups in Ansible Tower"]
+
+=== Exercise Four - Working with Inventory Groups
+
+For our example, I created 2 EC2 instances with the `user_id` value of bsmith (we'll call him Billy). You can see his Inventory Group in Figure 18 above. Let's make sure his systems are up and available. We can do this with his Inventory Group. For this exercise, do the same thing with your inventory group.
+
+[TIP]
+For this lab substitute your own Inventory Group for `tag_user_id_bsmith`.
+
+In the Inventories page, select the `tag_user_id_bsmith` group and click the `RUN COMMANDS` button that became available when you selected the group.
+
+In the new dialog box that opens up, select the 'Ping' module and use our `ansible-lab-instances` Machine Credential.
+
+image::figure19.png[title="Running an Arbitrary Command using an Inventory Group"]
+
+Next, click the `Launch` button.
+
+If all goes well, we will get a pong back from all of your systems.
+
+image::figure20.png[title="Successful Pongs from our Inventory Group"]
+
+With a few mouse clicks, we can run powerful arbitrary commands on any subset of our infrastructure. Pretty Awesome!
+
+[TIP]
+You can, of course, select multiple groups, or individual hosts, before launching your Commands.
