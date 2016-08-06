@@ -6,6 +6,7 @@
 :imagesdir: https://s3.amazonaws.com/ansible-lab-images
 :date: 08-Aug-2016
 :location: New York, NY
+:tower_url: https://ansible-tower.c2spaas.com
 :toclevels: 3
 
 = Automation for Everyone
@@ -75,13 +76,7 @@ This lab is NOT a walkthrough of Ansible Tower's setup. To be honest, it's too s
 
 === The End Result
 
-The Ansible Tower we set up for this lab is at https://ansible-tower.c2spaas.com
-
-[NOTE]
-.c2spaas.com
-====
-This is a wholly unrelated domain our boss controls in Route 53 that we stole an A record from.
-====
+The Ansible Tower we set up for this lab is at {tower_url}
 
 === The First Login
 
@@ -218,7 +213,7 @@ image::figure12.png[title="Scheduling EC2 Group Updates"]
 
 === Job Templates
 
-Now is where the rubber meets the road. A job template combines all of the things we just set up
+This is where the rubber meets the road. A job template combines all of the things we just set up
 
 * machine credentials
 * cloud credentials
@@ -231,7 +226,7 @@ image::figure13.png[title="Creating a Job Template"]
 
 === Exercise One - Lab User Creation
 
-Enough of watching us up here talk about Ansible Tower. Let's get users created for everyone in the lab today so you can log in for yourself. To do this we are going to create a Job Template from to utilize a playbook we have already created. The playbook is at https://github.com/bhirsch70/Ansible/tree/master/create_workshop_users
+Enough of watching us up here talk about Ansible Tower. Let's get users created for everyone in the lab today so you can log in for yourself. To do this we are going to create a Job Template from to utilize a playbook we have already created. The playbook is at https://github.com/bhirsch70/Ansible/tree/master/create_workshop_users .
 
 [IMPORTANT]
 This job, since it is only talking to the Tower API, will run locally on the Tower server itself. For jobs that don't actually need to go out to make changes to other systems this is normal.
@@ -282,13 +277,54 @@ This job, since it is only talking to the Tower API, will run locally on the Tow
   with_items: "{{ users }}"
 ....
 
-[IMPORTANT]
-Be sure you can log in to https://ansible-tower.c2spaas.com. The email you used to register for this workshop should be your username and the password will be shown as part of the lab. If you can't log in start shouting loud and waving your hands!
+==== Extra Variables
 
-=== Exercise Two - Creating EC2 Instances
+Extra Variables are passed into your playbook like they would be from the command line. It allows you to alter variables at runtime without needing to alter your actual playbook source code. It's incredibly useful when you need to feed dynamic data into a playbook easily.
 
-Now that everyone can log into Ansible Tower (right?!), everyone will be able to create a few EC2 instances to use during our following labs. You should be able to see a job template called `Provision EC2 Instances`. Click the `launch` button next to it in the `Job Templates` screen.
+Job Templates can prompt users to add/edit extra variables (and other parameters) at runtime. We are using this option for our User playbook so we can quickly feed the YAML that defines our users into Ansible.
+
+image::figure14.png[title="Adding Extra Variables at Job Template run time"]
 
 ==== Surveys
 
-You will now be prompted for a survey.
+Another way to prompt users for information is by creating a survey. A survey is a web form that accepts various kinds of input.
+
+It has the benefit of being able to do things like mask password inputs and create select boxes like any web form. All data from Surveys are passed in as variables and the inputs are passed in as unicode strings.
+
+image::figure15.png[title="Survey at Job Launch"]
+
+[TIP]
+Since everything is a unicode string, you can't use Surveys for data that is indentation-dependent. Things like YAML...
+
+Surveys and Extra Variables are some of the most powerful features of Ansible Tower and let you re-use code in very interesting ways.
+
+=== Exercise Two - Creating EC2 Instances
+
+[IMPORTANT]
+Be sure you can log in to {tower_url}. The email you used to register for this workshop should be your username and the password will be shown as part of the lab. If you can't log in start shouting loud and waving your hands!
+
+Now that everyone can log into Ansible Tower (right?!), everyone will be able to create a few EC2 instances to use during our following labs. You should be able to see a job template called `Provision EC2 Instances`. Click the `launch` button next to it in the `Job Templates` screen.
+
+[TIP]
+Can you see the job we used to create all of the user accounts?
+
+You will be prompted for a survey when you launch a Job based on this Job Template.
+
+==== Playbook Tags
+
+If you look at the link:https://github.com/bhirsch70/Ansible/blob/master/provision_ec2/roles/ec2_common/tasks/main.yml[playbook role that is being called], you will notice that the tasks have tags associated with them.
+
+....
+...
+- name: Wait for SSH to come up
+  local_action: wait_for host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
+  with_items: "{{ ec2.instances }}"
+  tags:
+    - provision
+
+- name: gather ec2 facts
+  action: ec2_facts
+  tags:
+    - terminate
+...
+....
