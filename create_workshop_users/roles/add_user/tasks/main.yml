@@ -11,9 +11,6 @@
 - name: config username for ansible tower-cli
   command: tower-cli config username {{ t_user }}
 
-- name: config tower host for ansible tower-cli
-  command: tower-cli config host {{ t_host }}
-
 - name: config password for ansible tower-cli
   command: tower-cli config password {{ t_pass }}
 
