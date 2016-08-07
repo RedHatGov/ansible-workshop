@@ -8,26 +8,26 @@
 :location: New York, NY
 :tower_url: https://ansible-tower.c2spaas.com
 :toclevels: 3
+:source-highlighter: highlight.js
 
 = Automation for Everyone
 {location} : {date}
 
-== Before We Get Started
+image::ansible_tower_logo.png[]
 
-=== Overview
+.Before We Get Started
+****
+[.lead]
+Overview
 
 Today is meant for anyone who has any exposure to Ansible, whether you have used it or not. We are going to start with a short overview (yes, slideware) and then we'll get into the lab as soon as possible. That is where we will spend most of our time.
 
-=== Your Responsibilities
+[.lead]
+Your Responsibilities
 
 * Have a discussion. This will be boring if it's just us up here talking for over 2 hours.
 * Participate. We are going to cut you loose in a live Ansible Tower instance here in just a little while.
 
-=== Getting Up and going
-
-There is always housekeeping, and we hope you're enjoying breakfast.
-
-==== Your Laptop is Your Friend
 Hopefully you have your laptop with you. If not, please find a shoulder-surfing buddy. See? Not only can we dig into Ansible but you can make a new friend!
 
 [IMPORTANT]
@@ -37,18 +37,23 @@ ssid: `Red Hat Guest`
 
 password: `atomic2016`
 ====
+****
 
-== Today's Team
 
-=== Tyler Cross
-Ansible Solutions Architect
+.Today's Team
+****
+[.lead]
+Tyler Cross - Ansible Solutions Architect
 
-=== Jamie Duncan
-Cloud Solutions Architect
+[.lead]
+Jamie Duncan - Cloud Solutions Architect
 
-=== Bill Hirsch
-Solutions Architect
+Jamie has been at Red Hat for about 5 years and works with all things cloudy. He lives in Central Virginia on a soon-to-be farm when he's not on the road talking about OpenStack or Containers or Ansible or something else cloudy.
 
+[.lead]
+Bill Hirsch - Solutions Architect
+
+****
 == Installing Ansible Tower
 
 === Infrastructure
@@ -160,14 +165,15 @@ When you have all of the information handy, like your SSH keys, Slack API Token,
 
 This can all also happen through the API or the command line using tower-cli on the Tower server or a remote server connecting back to the Tower server.
 
-....
+[source]
+----
 [ec2-user@ip-172-31-48-160 ~]$ tower-cli team list
 == ======== ============
 id   name   organization
 == ======== ============
  1 Lab Team            2
 == ======== ============
-....
+----
 
 === Projects
 
@@ -232,7 +238,8 @@ Enough of watching us up here talk about Ansible Tower. Let's get users created 
 This job, since it is only talking to the Tower API, will run locally on the Tower server itself. For jobs that don't actually need to go out to make changes to other systems this is normal.
 
 .site.yml - the playbook to be executed
-....
+[source]
+----
 ---
 - name: add Automation Lab Users
   hosts: 127.0.0.1
@@ -241,10 +248,11 @@ This job, since it is only talking to the Tower API, will run locally on the Tow
 
   roles:
     - add_user
-....
+----
 
 .roles/add_user/tasks/main.yml - the main role used by this playbook
-....
+[source]
+----
 ---
 - name: ensure pip is installed
   package: name=python-pip state=present
@@ -275,7 +283,7 @@ This job, since it is only talking to the Tower API, will run locally on the Tow
 - name: Associate user with Ansible Team
   command: tower-cli team associate --user {{ item.email }} --team "{{ team }}"
   with_items: "{{ users }}"
-....
+----
 
 === Extra Variables
 
@@ -314,7 +322,8 @@ You will be prompted for a survey when you launch a Job based on this Job Templa
 
 If you look at the link:https://github.com/bhirsch70/Ansible/blob/master/provision_ec2/roles/ec2_common/tasks/main.yml[playbook role that is being called], you will notice that the tasks have tags associated with them.
 
-....
+[source]
+----
 ...
 - name: Wait for SSH to come up
   local_action: wait_for host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
@@ -327,7 +336,7 @@ If you look at the link:https://github.com/bhirsch70/Ansible/blob/master/provisi
   tags:
     - terminate # <2>
 ...
-....
+----
 <1> provision tag
 <2> terminate tag
 
@@ -355,13 +364,14 @@ The second tag is called `user_id`, and is set to the value that you set when yo
 
 The relevant part of the task is
 
-....
+[source]
+----
   ec2:
 ...
     instance_tags:
       ansible_lab: true
       user_id: "{{ user_tag }}"
-....
+----
 
 image::figure17.png[title="Amazon Tagging that was created by our Job"]
 
@@ -420,7 +430,8 @@ The thing that you have to do, though, is account for ALL of the variables that 
 For this exercise, we will create a Job Template that will create local users on a given system. First, let's look at our playbook. For this we will be using link:https://github.com/bhirsch70/Ansible/tree/master/rhel_host_config[`rhel_host_config`] section in our GitHub repo.
 
 .playbook
-....
+[source]
+----
 ---
 - name: setup rhel VM
   hosts: all
@@ -429,10 +440,11 @@ For this exercise, we will create a Job Template that will create local users on
 
   roles:
     - host_common
-....
+----
 
 .host_common role tasks
-....
+[source]
+----
 ---
 - name: Add or remove user account
   user: name={{ item.name }} groups=wheel password={{ user_password }} state={{ user_state }}
@@ -460,7 +472,7 @@ For this exercise, we will create a Job Template that will create local users on
   template: src=../templates/motd.j2 dest=/etc/motd
   tags:
     - motd
-....
+----
 
 As we can see, the playbook calls the host_common role, and that role has several tasks that can be put together or seperated by their tags.
 
