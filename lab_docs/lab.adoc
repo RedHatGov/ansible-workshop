@@ -16,7 +16,6 @@
 [.float-group]
 --
 image:redhatlogo.png[RedHat,300,100]
-image:ansible_tower_logo.png[Ansible,300,100]
 --
 .Before We Get Started
 ****
@@ -58,7 +57,7 @@ Bill Hirsch - Solutions Architect
 
 ****
 == Installing Ansible Tower
-
+image::ansible_tower_logo.png[Ansible]
 === Infrastructure
 
 For this lab, we will be using Ansible Tower 3.0.1, which is the latest production release. We are running it in an link:https://aws.amazon.com/ec2/instance-types/[`m4.xlarge`] AWS instance.
@@ -71,7 +70,7 @@ But we'll only be running this for a few days and our bosses are paying the bill
 
 === Setup
 
-This lab is NOT a walkthrough of Ansible Tower's setup. To be honest, it's too simple. Essentially
+This lab is NOT a walkthrough of Ansible Tower's setup. To be honest, it's too simple.
 
 * get a system of correct size
 * register it with Red Hat
@@ -80,13 +79,13 @@ This lab is NOT a walkthrough of Ansible Tower's setup. To be honest, it's too s
 * fill a few variables out in an inventory file
 * run `setup.sh`
 
-`setup.sh` just calls a playbook that deploys Ansible Tower. Easy Peasy. It took approximately 15 minutes, end-to-end, for this lab.
+`setup.sh` just calls a playbook that deploys Ansible Tower. Total setup for this lab took approximately 45 minutes, end-to-end.
 
-=== The End Result
+=== End Result
 
 The Ansible Tower we set up for this lab is at {tower_url}
 
-=== The First Login
+=== First Login
 
 You know you were successful if you are able to browse to your Tower's hostname and get some like
 
