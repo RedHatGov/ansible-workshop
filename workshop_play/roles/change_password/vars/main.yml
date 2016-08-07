@@ -1,4 +1,0 @@
-passwd_users:
- - name: opuser
-
-new_passwd: $6$rounds=656000$0mVJDLr2voPVGY38$QEBeDdQpgaoN2rPw4uhGWNSupeniLrDdvU/bo2uLWDBe15Q8.UqqYs3nP4PNgtCv3vpYiHl19DlYg2PbSsTA9.

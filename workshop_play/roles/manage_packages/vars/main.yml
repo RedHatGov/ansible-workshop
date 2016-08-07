@@ -1,4 +1,0 @@
-# Define packages to be installed
-package_list:
- - git
- - vim

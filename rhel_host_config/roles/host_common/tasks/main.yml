@@ -20,3 +20,15 @@
     - "{{ package_list }}"
   tags:
     - packages
+
+- name: Update user's password
+  user: name={{ item.name }} password={{ new_passwd }} update_password=always
+  with_items:
+    - "{{ passwd_users }}"
+  tags:
+    - password
+
+- name: install a new /etc/resolv.conf file
+  template: src=resolv.conf dest=/etc/resolv.conf owner=root group=root mode=0644
+  tags:
+    - dns

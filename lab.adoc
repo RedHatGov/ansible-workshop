@@ -224,7 +224,7 @@ and puts them all together to provide a platform for effectively managing your i
 
 image::figure13.png[title="Creating a Job Template"]
 
-=== Exercise One - Lab User Creation
+== Exercise One - Lab User Creation
 
 Enough of watching us up here talk about Ansible Tower. Let's get users created for everyone in the lab today so you can log in for yourself. To do this we are going to create a Job Template from to utilize a playbook we have already created. The playbook is at https://github.com/bhirsch70/Ansible/tree/master/create_workshop_users .
 
@@ -277,7 +277,7 @@ This job, since it is only talking to the Tower API, will run locally on the Tow
   with_items: "{{ users }}"
 ....
 
-==== Extra Variables
+=== Extra Variables
 
 Extra Variables are passed into your playbook like they would be from the command line. It allows you to alter variables at runtime without needing to alter your actual playbook source code. It's incredibly useful when you need to feed dynamic data into a playbook easily.
 
@@ -285,7 +285,7 @@ Job Templates can prompt users to add/edit extra variables (and other parameters
 
 image::figure14.png[title="Adding Extra Variables at Job Template run time"]
 
-==== Surveys
+=== Surveys
 
 Another way to prompt users for information is by creating a survey. A survey is a web form that accepts various kinds of input.
 
@@ -298,7 +298,7 @@ Since everything is a unicode string, you can't use Surveys for data that is ind
 
 Surveys and Extra Variables are some of the most powerful features of Ansible Tower and let you re-use code in very interesting ways.
 
-=== Exercise Two - Creating EC2 Instances
+== Exercise Two - Creating EC2 Instances
 
 [IMPORTANT]
 Be sure you can log in to {tower_url}. The email you used to register for this workshop should be your username and the password will be shown as part of the lab. If you can't log in start shouting loud and waving your hands!
@@ -310,7 +310,7 @@ Can you see the job we used to create all of the user accounts?
 
 You will be prompted for a survey when you launch a Job based on this Job Template.
 
-==== Playbook Tags
+=== Playbook Tags
 
 If you look at the link:https://github.com/bhirsch70/Ansible/blob/master/provision_ec2/roles/ec2_common/tasks/main.yml[playbook role that is being called], you will notice that the tasks have tags associated with them.
 
@@ -340,12 +340,12 @@ image::figure16.png[title="Limiting Roles with Tags"]
 [TIP]
 Job Templates can also prompt for Playbook Tags at launch. Even more ways to be dynamic and not have to repeat yourself!
 
-=== Exercise Three - Working with Inventories
+== Exercise Three - Working with Inventories
 
 [IMPORTANT]
 If you are having trouble creating an instance or two, shout loud and start waving your hands!
 
-==== Creating Amazon Tags
+=== Creating Amazon Tags
 
 Now that we all have our own vm's created, let's do some work with them. First off, we need a way to distinguish your systems from the other lab systems that we just created. Luckily, we've already thought of that for us.
 
@@ -365,7 +365,7 @@ The relevant part of the task is
 
 image::figure17.png[title="Amazon Tagging that was created by our Job"]
 
-==== Leveraging Amazon Tags in Tower
+=== Leveraging Amazon Tags in Tower
 
 After we created our instances we updated our EC2 Inventory. As part of this update, Tower pulled in all of the tags that are in EC2 and correlated them back to our Inventory. For each unique tag value, Tower auto-creates a group that we can leverage. You can access these groups through your Inventory.
 
@@ -379,7 +379,7 @@ In the Inventories page, I can select these tag groups and do work on them as a 
 
 image::figure18.png[title="Using Amazon Tags to Create Dynamic Groups in Ansible Tower"]
 
-=== Exercise Four - Working with Inventory Groups
+== Exercise Four - Working with Inventory Groups
 
 For our example, I created 2 EC2 instances with the `user_id` value of bsmith (we'll call him Billy). You can see his Inventory Group in Figure 18 above. Let's make sure his systems are up and available. We can do this with his Inventory Group. For this exercise, do the same thing with your inventory group.
 
@@ -403,7 +403,7 @@ With a few mouse clicks, we can run powerful arbitrary commands on any subset of
 [TIP]
 You can, of course, select multiple groups, or individual hosts, before launching your Commands.
 
-=== Exercise Five - Creating a Job Template
+== Exercise Five - Creating a Job Template
 
 At this point, we can confidently navigate and we have gone through (almost) all of the major concepts in Ansible Tower. The final scripted exercise we have scheduled for today is going through the process around creating a Job Template.
 
@@ -421,5 +421,74 @@ For this exercise, we will create a Job Template that will create local users on
 
 .playbook
 ....
+---
+- name: setup rhel VM
+  hosts: all
+  gather_facts: no
+  become: true
 
+  roles:
+    - host_common
 ....
+
+.host_common role tasks
+....
+---
+- name: Add or remove user account
+  user: name={{ item.name }} groups=wheel password={{ user_password }} state={{ user_state }}
+  with_items:
+    - "{{ users }}"
+  tags:
+    - users
+
+- name: Force user with default password to change password at next login
+  command: chage -d 0 {{ item.name }}
+  when: user_state == "present"
+  with_items:
+    - "{{ users }}"
+  tags:
+    - users
+
+- name: Add or remove yum packages
+  package: name={{ item }} state={{ package_state }} use=yum
+  with_items:
+    - "{{ package_list }}"
+  tags:
+    - packages
+
+- name: Add an MOTD banner
+  template: src=../templates/motd.j2 dest=/etc/motd
+  tags:
+    - motd
+....
+
+As we can see, the playbook calls the host_common role, and that role has several tasks that can be put together or seperated by their tags.
+
+For this example exercise, we will create a job template that will add system users to our systems that will let us log in. Looking at the tasks with a `user` tag, we need to account for a few variables:
+
+* users - a dictionary of users with a name value
+* user_password - a password (encrypted)
+* user_state - to feed into the ansible task. There are a few valid options here.
+
+We will create a simple survey to handle all of this, along with prompting for our `Extra Variables` in the Job Template so we can dynamically create users for a given system or group of systems.
+
+image::figure21.png[title="Creating a Job Template to Add Users"]
+
+[TIP]
+.A Few Important Items
+====
+* We don't need Cloud Credentials since we are ssh-ing directly into the system to make changes
+* Notice the `Job Tags` field is referencing the `users` tag that is defined in the role. This way this Job will only execute those tasks.
+====
+
+image::figure22.png[title="Creating a Job Template Survey"]
+
+== Wrap Up, Q&A, and Free Style
+
+That wraps up what we have planned for today.
+
+What do you think? How can we help you understand Ansible Tower better?
+
+Thank you for your time and participation!
+
+image::redhatlogo.png[]
