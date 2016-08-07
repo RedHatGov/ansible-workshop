@@ -27,6 +27,14 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+#header {
+  background-image: url(https://s3.amazonaws.com/ansible-lab-images/redhatlogo.png);
+  background-size: 300px 100px;
+  background-repeat: no-repeat;
+  background-position: right;
+
+}
+
 /* Title font. */
 h1, h2, h3, h4, h5, h6,
 div.title, caption.title,
@@ -37,6 +45,8 @@ thead, p.table.header,
   font-family: "Overpass", "Open Sans","liberation sans", "Myriad ", "Bitstream Vera Sans", "Lucida Grande", "Luxi Sans", "Trebuchet MS", helvetica, verdana, arial, sans-serif;
   font-weight: 300;
 }
+
+
 
 body {
   margin: 1em 5% 1em 5%;

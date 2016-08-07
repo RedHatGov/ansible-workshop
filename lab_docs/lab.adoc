@@ -4,7 +4,7 @@
 :toc2: left
 :iconsdir: http://people.redhat.com/~jduncan/images/icons
 :imagesdir: https://s3.amazonaws.com/ansible-lab-images
-:date: 08-Aug-2016
+:date: 09-Aug-2016
 :location: New York, NY
 :tower_url: https://ansible-tower.c2spaas.com
 :toclevels: 3
@@ -13,10 +13,6 @@
 = Automation for Everyone
 {location} : {date}
 
-[.float-group]
---
-image:redhatlogo.png[RedHat,300,100]
---
 .Before We Get Started
 ****
 [.lead]
