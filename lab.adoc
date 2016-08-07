@@ -410,3 +410,11 @@ At this point, we can confidently navigate and we have gone through (almost) all
 Like we talked about earlier, a Job Template takes all of the other components that are tracked in Ansible Tower and brings them together to do actual work. To do a job.
 
 It's usually pretty straightforward.
+
+The thing that you have to do, though, is account for ALL of the variables that your playbook needs. These either have to be account for in:
+
+* your playbook role itself (in the code)
+* in your Job Templates `Extra Variables` field
+* in your Job Templates as a Survey
+
+For this exercise, we will create a Job Template that will create local users on a given system. First, let's look at our playbook. For this we will be using link:
