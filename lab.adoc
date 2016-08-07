@@ -10,14 +10,13 @@
 :toclevels: 3
 :source-highlighter: highlight.js
 
-image::redhatlogo.png[RedHat,300,100,float="right"]
 = Automation for Everyone
-
 {location} : {date}
 
 [.float-group]
 --
-image::ansible_tower_logo.png[Ansible,300,100,float="left"]
+image:redhatlogo.png[RedHat,300,100]
+image:ansible_tower_logo.png[Ansible,300,100]
 --
 .Before We Get Started
 ****
