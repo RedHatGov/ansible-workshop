@@ -5,7 +5,4 @@
   become: true
 
   roles:
-   # Role for user management
-    - manage_accounts
-   # Role for installing packages
-    - manage_packages
+    - host_common
