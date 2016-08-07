@@ -402,3 +402,11 @@ With a few mouse clicks, we can run powerful arbitrary commands on any subset of
 
 [TIP]
 You can, of course, select multiple groups, or individual hosts, before launching your Commands.
+
+=== Exercise Five - Creating a Job Template
+
+At this point, we can confidently navigate and we have gone through (almost) all of the major concepts in Ansible Tower. The final scripted exercise we have scheduled for today is going through the process around creating a Job Template.
+
+Like we talked about earlier, a Job Template takes all of the other components that are tracked in Ansible Tower and brings them together to do actual work. To do a job.
+
+It's usually pretty straightforward.

@@ -1,12 +1,22 @@
 ---
 - name: Add or remove user account
   user: name={{ item.name }} group={{ group_name }} home=/home/{{ item.name }} password={{ user_password }} state={{ user_state }}
-  with_items: 
+  with_items:
     - "{{ users }}"
+  tags:
+    - users
 
 - name: Force user with default password to change password at next login
   command: chage -d 0 {{ item.name }}
   when: user_state == "present"
   with_items:
     - "{{ users }}"
+  tags:
+    - users
 
+- name: Add or remove yum packages
+  package: name={{ item }} state={{ package_state }} use=yum
+  with_items:
+    - "{{ package_list }}"
+  tags:
+    - packages
