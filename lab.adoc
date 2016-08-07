@@ -10,11 +10,15 @@
 :toclevels: 3
 :source-highlighter: highlight.js
 
+image::redhatlogo.png[RedHat,300,100,float="right"]
 = Automation for Everyone
+
 {location} : {date}
 
-image::ansible_tower_logo.png[]
-
+[.float-group]
+--
+image::ansible_tower_logo.png[Ansible,300,100,float="left"]
+--
 .Before We Get Started
 ****
 [.lead]
@@ -26,7 +30,7 @@ Today is meant for anyone who has any exposure to Ansible, whether you have used
 Your Responsibilities
 
 * Have a discussion. This will be boring if it's just us up here talking for over 2 hours.
-* Participate. We are going to cut you loose in a live Ansible Tower instance here in just a little while.
+* Participate. We are going to cut you loose in a live Ansible Tower instance here in just a little while. Have questions. Have opinions.
 
 Hopefully you have your laptop with you. If not, please find a shoulder-surfing buddy. See? Not only can we dig into Ansible but you can make a new friend!
 
