@@ -417,4 +417,9 @@ The thing that you have to do, though, is account for ALL of the variables that 
 * in your Job Templates `Extra Variables` field
 * in your Job Templates as a Survey
 
-For this exercise, we will create a Job Template that will create local users on a given system. First, let's look at our playbook. For this we will be using link:
+For this exercise, we will create a Job Template that will create local users on a given system. First, let's look at our playbook. For this we will be using link:https://github.com/bhirsch70/Ansible/tree/master/rhel_host_config[`rhel_host_config`] section in our GitHub repo.
+
+.playbook
+....
+
+....
