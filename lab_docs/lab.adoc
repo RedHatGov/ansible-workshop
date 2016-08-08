@@ -51,10 +51,12 @@ Jamie has been at Red Hat for about 5 years and works with all things cloudy. He
 [.lead]
 Bill Hirsch - Solutions Architect
 
+Bill joined Red Hat earlier this year as an account architect focused on all things Red Hat. He joins us as a former customer where he specialized in Linux/Unix, automation, and monitoring. He lives in Pittsburgh with his wife, three boys, and too many pets.
+
 ****
 == Document Copyright
 
-This document was created by and for Red Hat, Inc. It is being released under link:https://creativecommons.org/licenses/by/4.0/[Creative Commons License 4.0]. You are free to re-use it in whole or in part. 
+This document was created by and for Red Hat, Inc. It is being released under link:https://creativecommons.org/licenses/by/4.0/[Creative Commons License 4.0]. You are free to re-use it in whole or in part.
 
 You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
 
