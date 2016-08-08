@@ -1,6 +1,6 @@
 ---
 - name: Add or remove user account
-  user: name={{ item.name }} group={{ group_name }} home=/home/{{ item.name }} password={{ user_password }} state={{ user_state }}
+  user: name={{ item.name }} group=users home=/home/{{ item.name }} password={{ user_password }} state={{ user_state }}
   with_items:
     - "{{ users }}"
   tags:
