@@ -4,7 +4,7 @@
     name: "{{ item.name }}"
     group: users
     home: /home/{{ item.name }}
-    password: "{{ user_password }}"
+    password: changeme
     state: "{{ user_state }}"
   with_items:
     - "{{ users }}"
