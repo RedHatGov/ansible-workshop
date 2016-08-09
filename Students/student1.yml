@@ -1,17 +1,17 @@
 ---
-  - name: setup rhel VM
+  - name: Add or remove packages to a RHEL host
     hosts: tag_user_id_{{ tower_user_name }}
     gather_facts: no
     become: true
 
     tasks:
       - name: Add or remove yum packages
-        vars:
-          package_state: present
-          package_list:
-            - httpd
-            - git
-            - vim
+        # vars:
+        #   package_state: present
+        #   package_list:
+        #     - httpd
+        #     - git
+        #     - vim
         package:
           name: "{{ item }}"
           state: "{{ package_state }}"
