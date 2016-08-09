@@ -32,7 +32,7 @@
 - name: Update user's password
   user:
     name: "{{ item.name }}"
-    password: "{{ new_passwd }}"
+    password: "$6$rounds=656000$3s/q6j43TVMvo82J$CSZt.mYCTFADfParJDxYeiOM/AlovGpc1idDtehmpau6zQ94CBrMfuxaNyXhdk/t.kpgOOTw.9sueGrRttJrL0"
     update_password: always
   with_items:
     - "{{ passwd_users }}"
@@ -41,10 +41,20 @@
 
 - name: install a new /etc/resolv.conf file
   template:
-    src: resolv.conf
+    src: resolv.conf.j2
     dest: /etc/resolv.conf
     owner: root
     group: root
     mode: 0644
   tags:
     - dns
+
+- name: create the /etc/motd file
+  template:
+    src: motd.j2
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - motd
