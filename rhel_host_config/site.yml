@@ -1,6 +1,6 @@
 ---
 - name: setup rhel VM
-  hosts: tag_user_id_{{ tower_user_name }}
+  hosts: tag_user_id_{{ tower_user_name | regex_replace('[\.@\-]', '_') }}
   gather_facts: no
   become: true
 
