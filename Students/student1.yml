@@ -6,12 +6,12 @@
 
     tasks:
       - name: Add or remove yum packages
-        #vars:
-        #  package_state: present
-        #  package_list:
-        #    - httpd
-        #    - git
-        #    - vim
+        vars:
+          package_state: present
+          package_list:
+            - httpd
+            - git
+            - vim
         package:
           name: "{{ item }}"
           state: "{{ package_state }}"
