@@ -1,6 +1,11 @@
 ---
 - name: Add or remove user account
-  user: name={{ item.name }} group=users home=/home/{{ item.name }} password={{ user_password }} state={{ user_state }}
+  user:
+    name: "{{ item.name }}"
+    group: users
+    home: /home/{{ item.name }}
+    password: "{{ user_password }}"
+    state: "{{ user_state }}"
   with_items:
     - "{{ users }}"
   tags:
@@ -15,20 +20,31 @@
     - users
 
 - name: Add or remove yum packages
-  package: name={{ item }} state={{ package_state }} use=yum
+  package:
+    name: "{{ item }}"
+    state: "{{ package_state }}"
+    use: yum
   with_items:
     - "{{ package_list }}"
   tags:
     - packages
 
 - name: Update user's password
-  user: name={{ item.name }} password={{ new_passwd }} update_password=always
+  user:
+    name: "{{ item.name }}"
+    password: "{{ new_passwd }}"
+    update_password: always
   with_items:
     - "{{ passwd_users }}"
   tags:
     - password
 
 - name: install a new /etc/resolv.conf file
-  template: src=resolv.conf dest=/etc/resolv.conf owner=root group=root mode=0644
+  template:
+    src: resolv.conf
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
   tags:
     - dns
