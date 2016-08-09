@@ -1,0 +1,157 @@
+---
+- hosts: tower
+  gather_facts: no
+  remote_user: ec2-user
+  become: yes
+  vars:
+    aws_region: us-west-2
+    aws_credential: ec2-jduncan
+    lab_user_credential: ansible-lab-instances
+    lab_admin_credentials: ansible-lab-admin
+    organizations:
+      - name: Lab Organization
+        description: Automation for Everyone Lab Organization
+    teams:
+      - name: Lab Team
+        description: Automation for Everyone Lab Team
+        organization: Lab Organization
+    projects:
+      - name: Lab Project
+        description: Automation for Everyone Project
+        organization: Lab Organization
+        scm_type: git
+        scm_url: https://github.com/bhirsch70/Ansible.git
+        scm_branch: master
+    users:
+      - first_name: Tyler
+        last_name: Cross
+        username: tcross
+        email: tcross@redhat.com
+        password: changeme
+        superuser: no
+        auditor: no
+        organization: Lab Organization
+        team: Lab Team
+  vars_prompt:
+    - name: tower_cli_host
+      prompt: What is the Tower hostname?
+      default: ansible-tower.c2spaas.com
+    - name: tower_cli_user
+      prompt: What is the Tower user for CLI access?
+      default: admin
+    - name: tower_cli_password
+      prompt: What is the password for the Tower user for CLI access?
+      private: yes
+  tasks:
+    - name: Ensure the tower-cli application is installed
+      pip:
+        name: ansible-tower-cli
+        state: present
+
+    - name: Create all organizations
+      shell: >
+        tower-cli organization create
+        --name "{{ item.name }}"
+        --description "{{ item.description }}"
+        --force-on-exists
+        --tower-host "{{ tower_cli_host }}"
+        --tower-username "{{ tower_cli_user }}"
+        --tower-password "{{ tower_cli_password }}"
+      with_items: "{{ organizations }}"
+
+    - name: Create all teams
+      shell: >
+        tower-cli team create
+        --name "{{ item.name }}"
+        --description "{{ item.description }}"
+        --organization "{{ item.organization }}"
+        --force-on-exists
+        --tower-host "{{ tower_cli_host }}"
+        --tower-username "{{ tower_cli_user }}"
+        --tower-password "{{ tower_cli_password }}"
+      with_items: "{{ teams }}"
+
+    - name: Create all projects
+      shell: >
+        tower-cli project create
+        --name "{{ item.name }}"
+        --description "{{ item.description }}"
+        --organization "{{ item.organization }}"
+        --scm-type "{{ item.scm_type }}"
+        --scm-url "{{ item.scm_url }}"
+        --scm-branch "{{ item.scm_branch }}"
+        --scm-clean True
+        --scm-delete-on-update True
+        --scm-update-on-launch True
+        --force-on-exists
+        --tower-host "{{ tower_cli_host }}"
+        --tower-username "{{ tower_cli_user }}"
+        --tower-password "{{ tower_cli_password }}"
+      with_items: "{{ projects }}"
+
+    - name: Create all users
+      shell: >
+        tower-cli user create
+        --first-name "{{ item.first_name }}"
+        --last-name "{{ item.last_name }}"
+        --username "{{ item.username }}"
+        --email "{{ item.email }}"
+        --is-superuser "{{ item.superuser | bool }}"
+        --is-system-auditor "{{ item.auditor | bool }}"
+        --password "{{ item.password }}"
+        --force-on-exists
+        --tower-host "{{ tower_cli_host }}"
+        --tower-username "{{ tower_cli_user }}"
+        --tower-password "{{ tower_cli_password }}"
+      with_items: "{{ users }}"
+
+    - name: Associate users with their organization
+      shell: >
+        tower-cli organization associate
+        --user "{{ item.username }}"
+        --organization "{{ item.organization }}"
+        --tower-host "{{ tower_cli_host }}"
+        --tower-username "{{ tower_cli_user }}"
+        --tower-password "{{ tower_cli_password }}"
+      with_items:
+        - "{{ users }}"
+
+    - name: Associate users with their teams
+      shell: >
+        tower-cli team associate
+        --user "{{ item.username }}"
+        --team "{{ item.team }}"
+        --tower-host "{{ tower_cli_host }}"
+        --tower-username "{{ tower_cli_user }}"
+        --tower-password "{{ tower_cli_password }}"
+      with_items:
+        - "{{ users }}"
+
+    - name: Create an inventory for each user
+      shell: >
+        tower-cli inventory create
+        --name "{{ item.username }} inventory"
+        --organization "{{ item.organization }}"
+        --force-on-exists
+        --tower-host "{{ tower_cli_host }}"
+        --tower-username "{{ tower_cli_user }}"
+        --tower-password "{{ tower_cli_password }}"
+      with_items: "{{ users }}"
+
+    - name: Set up each users inventory
+      shell: >
+        tower-cli group create
+        --name "{{ aws_region }}"
+        --inventory "{{ item.username }} inventory"
+        --credential "{{ aws_credential }}"
+        --source ec2
+        --source-regions "{{ aws_region }}"
+        --instance-filters "tag:ansible_lab=True"
+        --overwrite True
+        --overwrite-vars True
+        --update-on-launch True
+        --force-on-exists
+        --tower-host "{{ tower_cli_host }}"
+        --tower-username "{{ tower_cli_user }}"
+        --tower-password "{{ tower_cli_password }}"
+      with_items: "{{ users }}"
