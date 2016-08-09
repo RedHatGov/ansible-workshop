@@ -1,6 +1,6 @@
 ---
 - name: setup rhel VM
-  hosts: all
+  hosts: tag_user_id_{{ tower_user_name }}
   gather_facts: no
   become: true
 

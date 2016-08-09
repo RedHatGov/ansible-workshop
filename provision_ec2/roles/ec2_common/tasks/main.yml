@@ -10,6 +10,7 @@
     vpc_subnet_id: subnet-7f611a1b
     assign_public_ip: yes
     instance_tags:
+      Name: "{{ tower_user_name }}-lab"
       ansible_lab: true
       user_id: "{{ tower_user_name }}"
     wait: true
