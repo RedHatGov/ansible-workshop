@@ -32,6 +32,15 @@
         auditor: no
         organization: Lab Organization
         team: Lab Team
+        first_name: Student
+        last_name: Two
+        username: student2
+        email: student2@example.com
+        password: student2
+        superuser: no
+        auditor: no
+        organization: Lab Organization
+        team: Lab Team
   vars_prompt:
     - name: tower_cli_host
       prompt: What is the Tower hostname?
