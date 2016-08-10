@@ -17,6 +17,6 @@
           state: "{{ package_state }}"
           use: yum
         with_items:
-          - ""
+          - "{{ package_list }}"
         tags:
           - package
