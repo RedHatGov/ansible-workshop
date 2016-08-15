@@ -1,9 +1,0 @@
----
-  - name: Slava's Hello World playbook
-    hosts: all
-    gather_facts: no
-    become: true
-
-    tasks:
-      - name: Saying Hello
-        debug: msg="Hello World!"
