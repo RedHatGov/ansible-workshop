@@ -6,6 +6,7 @@
     home: /home/{{ item.name }}
     password: "$6$rounds=656000$3s/q6j43TVMvo82J$CSZt.mYCTFADfParJDxYeiOM/AlovGpc1idDtehmpau6zQ94CBrMfuxaNyXhdk/t.kpgOOTw.9sueGrRttJrL0"
     state: "{{ user_state }}"
+    remove: yes
   with_items:
     - "{{ users }}"
   tags:
