@@ -1,6 +1,7 @@
 ---
 - name: setup rhel VM
-  hosts: tag_user_id_{{ tower_user_name | regex_replace('[\.@\-]', '_') }}
+  #hosts: tag_user_id_{{ tower_user_name | regex_replace('[\.@\-]', '_') }} # specific configuration for ec2 lab
+  hosts: all
   gather_facts: no
   become: true
 
