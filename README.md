@@ -11,6 +11,10 @@ NOTE:  This is work in progress
 
 Creates or removes user accounts / Installs or removes yum packages
 
+# provision_ec2
+
+Provisions ec2 instances
+
 # Dependencies 
 None
 
