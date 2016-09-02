@@ -1,22 +1,23 @@
 # rhel_host_config
-This play adds or removes user accounts and adds or removes yum packages
+This play performs a number of basic RHEL tasks for user, password, package management, etc.
 
-### group_vars
-users, group_name, user_password, package_list
+## Role: host_common
 
 ### Extra Vars
  - user_state: "\<present \| absent\>"
+ - users:
  - package_state: "\<present \| absent\>"
-
-## Role: manage_account
+ - packages:
+ - password_users:
 
 ### Tasks
-- Add or remove user account
+- Add or remove user account(s)
 - chage to 0 for force passwd reset upon first login
+- Add or remove yum packages
+- Update user's password
+- Install /etc/resolv.conf from template
+- Install /etc/motd from template
 
-## Role: manage_packages
-
-### Tasks 
-- install or remove yum packages
-
-
+### Templates
+ - motd.j2
+ - resolv.conf.j2
