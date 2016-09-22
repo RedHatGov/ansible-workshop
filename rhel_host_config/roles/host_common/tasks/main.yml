@@ -33,7 +33,7 @@
 - name: Update user's password
   user:
     name: "{{ item.name }}"
-    password: "{{ user_password }}"
+    password: "$6$rounds=656000$3s/q6j43TVMvo82J$CSZt.mYCTFADfParJDxYeiOM/AlovGpc1idDtehmpau6zQ94CBrMfuxaNyXhdk/t.kpgOOTw.9sueGrRttJrL0"
     update_password: always
   with_items:
     - "{{ passwd_users }}"
