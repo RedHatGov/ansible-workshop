@@ -64,7 +64,7 @@ You must give appropriate credit, provide a link to the license, and indicate if
 image::ansible_tower_logo.png[Ansible]
 === Infrastructure
 
-For this lab, we will be using Ansible Tower 3.0.1, which is the latest production release. We are running it in an link:https://aws.amazon.com/ec2/instance-types/[`m4.xlarge`] AWS instance.
+For this lab, we will be using Ansible Tower 3.0.2, which is the latest production release. We are running it in an link:https://aws.amazon.com/ec2/instance-types/[`m4.xlarge`] AWS instance.
 
 [NOTE]
 .We know this is resource overkill
@@ -236,83 +236,8 @@ and puts them all together to provide a platform for effectively managing your i
 
 image::figure13.png[title="Creating a Job Template"]
 
-== Exercise One - Lab User Creation
 
-Enough of watching us up here talk about Ansible Tower. Let's get users created for everyone in the lab today so you can log in for yourself. To do this we are going to create a Job Template from to utilize a playbook we have already created. The playbook is at https://github.com/bhirsch70/Ansible/tree/master/create_workshop_users .
-
-[IMPORTANT]
-This job, since it is only talking to the Tower API, will run locally on the Tower server itself. For jobs that don't actually need to go out to make changes to other systems this is normal.
-
-.site.yml - the playbook to be executed
-[source]
-----
----
-- name: add Automation Lab Users
-  hosts: 127.0.0.1
-  connection: local
-  gather_facts: false
-
-  roles:
-    - add_user
-----
-
-.roles/add_user/tasks/main.yml - the main role used by this playbook
-[source]
-----
----
-- name: ensure pip is installed
-  package: name=python-pip state=present
-
-- name: install tower-cli
-  pip: name=ansible-tower-cli
-
-- name: disable ssl for tower-cli for the demo
-  command: tower-cli config verify_ssl false
-
-- name: config username for ansible tower-cli
-  command: tower-cli config username {{ t_user }}
-
-- name: config tower host for ansible tower-cli
-  command: tower-cli config host {{ t_host }}
-
-- name: config password for ansible tower-cli
-  command: tower-cli config password {{ t_pass }}
-
-- name: Add user to Ansible Tower
-  command: tower-cli user create --username {{ item.email }} --first-name {{ item.firstname }} --last-name {{ item.lastname }} --email {{ item.email }} --password {{ default_password }}
-  with_items: "{{ users }}"
-
-- name: Associate user with Ansible Organization
-  command: tower-cli organization associate --user {{ item.email }} --organization "{{ organization }}"
-  with_items: "{{ users }}"
-
-- name: Associate user with Ansible Team
-  command: tower-cli team associate --user {{ item.email }} --team "{{ team }}"
-  with_items: "{{ users }}"
-----
-
-=== Extra Variables
-
-Extra Variables are passed into your playbook like they would be from the command line. It allows you to alter variables at runtime without needing to alter your actual playbook source code. It's incredibly useful when you need to feed dynamic data into a playbook easily.
-
-Job Templates can prompt users to add/edit extra variables (and other parameters) at runtime. We are using this option for our User playbook so we can quickly feed the YAML that defines our users into Ansible.
-
-image::figure14.png[title="Adding Extra Variables at Job Template run time"]
-
-=== Surveys
-
-Another way to prompt users for information is by creating a survey. A survey is a web form that accepts various kinds of input.
-
-It has the benefit of being able to do things like mask password inputs and create select boxes like any web form. All data from Surveys are passed in as variables and the inputs are passed in as unicode strings.
-
-image::figure15.png[title="Survey at Job Launch"]
-
-[TIP]
-Since everything is a unicode string, you can't use Surveys for data that is indentation-dependent. Things like YAML...
-
-Surveys and Extra Variables are some of the most powerful features of Ansible Tower and let you re-use code in very interesting ways.
-
-== Exercise Two - Creating EC2 Instances
+== Exercise One - Creating EC2 Instances
 
 [IMPORTANT]
 Be sure you can log in to {tower_url}. The email you used to register for this workshop should be your username and the password will be shown as part of the lab. If you can't log in start shouting loud and waving your hands!
@@ -355,7 +280,7 @@ image::figure16.png[title="Limiting Roles with Tags"]
 [TIP]
 Job Templates can also prompt for Playbook Tags at launch. Even more ways to be dynamic and not have to repeat yourself!
 
-== Exercise Three - Working with Inventories
+== Exercise Two - Working with Inventories
 
 [IMPORTANT]
 If you are having trouble creating an instance or two, shout loud and start waving your hands!
@@ -395,7 +320,7 @@ In the Inventories page, I can select these tag groups and do work on them as a 
 
 image::figure18.png[title="Using Amazon Tags to Create Dynamic Groups in Ansible Tower"]
 
-== Exercise Four - Working with Inventory Groups
+== Exercise Three - Working with Inventory Groups
 
 For our example, I created 2 EC2 instances with the `user_id` value of bsmith (we'll call him Billy). You can see his Inventory Group in Figure 18 above. Let's make sure his systems are up and available. We can do this with his Inventory Group. For this exercise, do the same thing with your inventory group.
 
@@ -419,7 +344,7 @@ With a few mouse clicks, we can run powerful arbitrary commands on any subset of
 [TIP]
 You can, of course, select multiple groups, or individual hosts, before launching your Commands.
 
-== Exercise Five - Creating a Job Template
+== Exercise Four - Creating a Job Template
 
 At this point, we can confidently navigate and we have gone through (almost) all of the major concepts in Ansible Tower. The final scripted exercise we have scheduled for today is going through the process around creating a Job Template.
 
@@ -453,7 +378,13 @@ For this exercise, we will create a Job Template that will create local users on
 ----
 ---
 - name: Add or remove user account
-  user: name={{ item.name }} groups=wheel password={{ user_password }} state={{ user_state }}
+  user:
+    name: "{{ item.name }}"
+    group: users
+    home: /home/{{ item.name }}
+    password: "$6$rounds=656000$3s/q6j43TVMvo82J$CSZt.mYCTFADfParJDxYeiOM/AlovGpc1idDtehmpau6zQ94CBrMfuxaNyXhdk/t.kpgOOTw.9sueGrRttJrL0"
+    state: "{{ user_state }}"
+    remove: yes
   with_items:
     - "{{ users }}"
   tags:
@@ -468,14 +399,22 @@ For this exercise, we will create a Job Template that will create local users on
     - users
 
 - name: Add or remove yum packages
-  package: name={{ item }} state={{ package_state }} use=yum
+  package:
+    name: "{{ item }}"
+    state: "{{ package_state }}"
+    use: yum
   with_items:
     - "{{ package_list }}"
   tags:
     - packages
 
-- name: Add an MOTD banner
-  template: src=../templates/motd.j2 dest=/etc/motd
+- name: create the /etc/motd file
+  template:
+    src: motd.j2
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: 0644
   tags:
     - motd
 ----
