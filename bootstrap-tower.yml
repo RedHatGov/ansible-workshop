@@ -5,7 +5,7 @@
   become: yes
   vars:
     aws_region: us-west-2
-    aws_credential: ec2-jduncan
+    aws_credential: bhirsch@redhat.com
     lab_user_credential: ansible-lab-instances
     lab_admin_credentials: ansible-lab-admin
     organizations:
@@ -23,15 +23,6 @@
         scm_url: https://github.com/bhirsch70/Ansible.git
         scm_branch: master
     users:
-      - first_name: Tyler
-        last_name: Cross
-        username: tcross
-        email: tcross@redhat.com
-        password: changeme
-        superuser: no
-        auditor: no
-        organization: Lab Organization
-        team: Lab Team
       - first_name: Student
         last_name: One
         username: student1
@@ -122,55 +113,10 @@
         auditor: no
         organization: Lab Organization
         team: Lab Team
-      - first_name: Student
-        last_name: Eleven
-        username: student11
-        email: student11@example.com
-        password: student11
-        superuser: no
-        auditor: no
-        organization: Lab Organization
-        team: Lab Team
-      - first_name: Student
-        last_name: Twelve
-        username: student12
-        email: student12@example.com
-        password: student12
-        superuser: no
-        auditor: no
-        organization: Lab Organization
-        team: Lab Team
-      - first_name: Student
-        last_name: Thirteen
-        username: student13
-        email: student13@example.com
-        password: student13
-        superuser: no
-        auditor: no
-        organization: Lab Organization
-        team: Lab Team
-      - first_name: Student
-        last_name: Fourteen
-        username: student14
-        email: student14@example.com
-        password: student14
-        superuser: no
-        auditor: no
-        organization: Lab Organization
-        team: Lab Team
-      - first_name: Student
-        last_name: Fifteen
-        username: student15
-        email: student15@example.com
-        password: student15
-        superuser: no
-        auditor: no
-        organization: Lab Organization
-        team: Lab Team
   vars_prompt:
     - name: tower_cli_host
       prompt: What is the Tower hostname?
-      default: ansible-tower.c2spaas.com
+      default: ansible-tower-hirsch.c2spaas.com
     - name: tower_cli_user
       prompt: What is the Tower user for CLI access?
       default: admin
@@ -194,17 +140,17 @@
         --tower-password "{{ tower_cli_password }}"
       with_items: "{{ organizations }}"
 
-    - name: Create all teams
-      shell: >
-        tower-cli team create
-        --name "{{ item.name }}"
-        --description "{{ item.description }}"
-        --organization "{{ item.organization }}"
-        --force-on-exists
-        --tower-host "{{ tower_cli_host }}"
-        --tower-username "{{ tower_cli_user }}"
-        --tower-password "{{ tower_cli_password }}"
-      with_items: "{{ teams }}"
+    #- name: Create all teams
+    #  shell: >
+    #    tower-cli team create
+    #    --name "{{ item.name }}"
+    #    --description "{{ item.description }}"
+    #    --organization "{{ item.organization }}"
+    #    --force-on-exists
+    #    --tower-host "{{ tower_cli_host }}"
+    #    --tower-username "{{ tower_cli_user }}"
+    #    --tower-password "{{ tower_cli_password }}"
+    #  with_items: "{{ teams }}"
 
     - name: Create all projects
       shell: >
