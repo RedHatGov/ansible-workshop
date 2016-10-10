@@ -1,4 +1,0 @@
-- name: set the new hostname
-  hostname: name={{ hostname }}
-
-- name: Configure ssh keys

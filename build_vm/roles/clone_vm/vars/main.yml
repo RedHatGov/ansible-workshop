@@ -1,4 +1,0 @@
-source_vm: rhel.7.2-vm2-Ansible_Client
-target_vm: rhel.7.2-vm6-Ansible_Client
-path: /home/bhirsch/VirtualMachines/rhel.7.2-vm6-Ansible_Client.qcow2
-connect: qemu:///system
