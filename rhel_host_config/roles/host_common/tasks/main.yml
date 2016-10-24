@@ -9,12 +9,13 @@
     remove: yes
   with_items:
     - "{{ users }}"
+  register: result
   tags:
     - users
 
 - name: Force user with default password to change password at next login
   command: chage -d 0 {{ item.name }}
-  when: user_state == "present"
+  when: result.changed
   with_items:
     - "{{ users }}"
   tags:
