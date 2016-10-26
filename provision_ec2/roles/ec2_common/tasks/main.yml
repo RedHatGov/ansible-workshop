@@ -1,7 +1,7 @@
 ---
 - name: create ec2 instance
   ec2:
-    keypair: ansible-lab-instances
+    keypair: ansible-lab
     type: t2.small
     image: ami-ca56b5aa
     region: us-west-2
