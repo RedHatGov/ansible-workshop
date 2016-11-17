@@ -1,8 +1,0 @@
----
-- name: add Automation Lab Users
-  hosts: 127.0.0.1
-  connection: local
-  gather_facts: false
-
-  roles:
-    - add_user

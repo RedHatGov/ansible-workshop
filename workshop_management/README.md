@@ -1,15 +1,23 @@
-# create_workshop_users
-This play creates Ansible lab users
+# bootstrap-tower.yml
+This play configures Ansible Tower in AWS to be used in a guided workshop.  
+It creates the following configurations:
+* organizations
+* teams
+* users (student1-10)
+* projects
+* inventories
 
 
-### Extra Vars
- - user_file: path to csv file with user names
-   format:
-   ```
-   firstname,lastname,email
-   John,Smith,jsmith@company.com
-   ```
- - org: name or org to be associated with
+### Vars
+* aws_region:
+* aws_credential:
+* lab_user_credential:
+* lab_admin_credentials:
+* organizations:
+* teams:
+* projects:
+* users:
 
-## Role: add_user
-- Creates or removes specified user accounts on a RHEL host
+### Dependencies
+* tower-cli must be installed on the ansible master
+* tower-cli must be configured to connect to the target host (Tower instance)
