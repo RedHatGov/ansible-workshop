@@ -15,7 +15,7 @@
 
 - name: Force user with default password to change password at next login
   command: chage -d 0 {{ item.name }}
-  when: result.changed
+  when: ( result.changed and user_state == "present" )
   with_items:
     - "{{ users }}"
   tags:
@@ -34,7 +34,7 @@
 - name: Update user's password
   user:
     name: "{{ item.name }}"
-    password: "$6$rounds=656000$3s/q6j43TVMvo82J$CSZt.mYCTFADfParJDxYeiOM/AlovGpc1idDtehmpau6zQ94CBrMfuxaNyXhdk/t.kpgOOTw.9sueGrRttJrL0"
+    password: "{{ password_hash }}"
     update_password: always
   with_items:
     - "{{ passwd_users }}"

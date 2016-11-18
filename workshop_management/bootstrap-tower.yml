@@ -140,17 +140,17 @@
         --tower-password "{{ tower_cli_password }}"
       with_items: "{{ organizations }}"
 
-    #- name: Create all teams
-    #  shell: >
-    #    tower-cli team create
-    #    --name "{{ item.name }}"
-    #    --description "{{ item.description }}"
-    #    --organization "{{ item.organization }}"
-    #    --force-on-exists
-    #    --tower-host "{{ tower_cli_host }}"
-    #    --tower-username "{{ tower_cli_user }}"
-    #    --tower-password "{{ tower_cli_password }}"
-    #  with_items: "{{ teams }}"
+    - name: Create all teams
+      shell: >
+        tower-cli team create
+        --name "{{ item.name }}"
+        --description "{{ item.description }}"
+        --organization "{{ item.organization }}"
+        --force-on-exists
+        --tower-host "{{ tower_cli_host }}"
+        --tower-username "{{ tower_cli_user }}"
+        --tower-password "{{ tower_cli_password }}"
+      with_items: "{{ teams }}"
 
     - name: Create all projects
       shell: >
@@ -235,4 +235,22 @@
         --tower-host "{{ tower_cli_host }}"
         --tower-username "{{ tower_cli_user }}"
         --tower-password "{{ tower_cli_password }}"
+      with_items: "{{ users }}"
+
+    - name: Grant users access to workshop project
+      shell: >
+        tower-cli role grant
+        --project "{{ item[0].name }}"
+        --user "{{ item[1].username }}"
+        --type "read"
+      with_nested:
+        - "{{ projects }}"
+        - "{{ users }}"
+
+    - name: Grant user access to his/her own inventory
+      shell: >
+        tower-cli role grant
+        --inventory "{{ item.username }} inventory"
+        --user "{{ item.username }}"
+        --type "admin"
       with_items: "{{ users }}"

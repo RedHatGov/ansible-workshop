@@ -1,14 +1,13 @@
 # Ansible Projects
 This project includes various Ansible plays, mostly focused on RHEL system administration
 
-# Build_VM
-NOTE:  This is work in progress
-
-Build_VM clones an existing KVM guest to a new guest
-
 # rhel_host_config
 
-Creates or removes user accounts / Installs or removes yum packages
+* Creates or removes user accounts, sets temp password, forces updated password
+upon first login
+* Installs or removes yum packages
+* Installs template for resolv.conf
+* Installs template for motd
 
 # provision_ec2
 
@@ -20,7 +19,7 @@ Uses tower-cli to prepare a tower host for a student workshop
 Creates accounts, orgs, teams, projects, and inventories
 
 # Dependencies
-None
+See individual READMEs
 
 # License
 GPLv3
